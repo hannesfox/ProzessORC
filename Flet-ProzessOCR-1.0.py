@@ -31,10 +31,11 @@ snackbar_lock = threading.Lock()
 
 def main(page: ft.Page):
     """Die Hauptfunktion, die die Flet-Anwendung initialisiert und ausführt."""
-    page.title = "Material Selector"
+    page.title = "Flet-ProzessORC"
     page.window_width = 850
     page.window_height = 650
     page.theme_mode = ft.ThemeMode.DARK
+    #page.theme_mode = ft.ThemeMode.LIGHT
 
     # ordner für Materialien
     root_paths = [
