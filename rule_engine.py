@@ -135,42 +135,42 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 21.0 and
-                kl_r is not None and 0.0 <= kl_r <= 2.0,
+                kl_r is not None and 1.51 <= kl_r <= 2.0,
             (r"02_Taschen\Profit", "02")),  # FR04
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 21.0 and
-                kl_r is not None and 0.0 <= kl_r <= 2.5,
+                kl_r is not None and 2.01 <= kl_r <= 2.5,
              (r"02_Taschen\Profit", "03")),  # FR05
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 20.0 and
-                kl_r is not None and 0.0 <= kl_r <= 3.0,
+                kl_r is not None and 2.51 <= kl_r <= 3.0,
              (r"02_Taschen\Profit", "04")),  # FR06
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 25.0 and
-                kl_r is not None and 0.0 <= kl_r <= 4.0,
+                kl_r is not None and 3.01 <= kl_r <= 4.0,
              (r"02_Taschen\Profit", "05")),  # FR08
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 40.0 and
-                kl_r is not None and 0.0 <= kl_r <= 5.0,
+                kl_r is not None and 4.01 <= kl_r <= 5.0,
              (r"02_Taschen\Profit", "07")),  # FR10
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 35.0 and
-                kl_r is not None and 0.0 <= kl_r <= 6.0,
+                kl_r is not None and 5.01 <= kl_r <= 6.0,
              (r"02_Taschen\Profit", "08")),  # FR12
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 45.0 and
-                kl_r is not None and 0.0 <= kl_r <= 8.0,
+                kl_r is not None and 6.01 <= kl_r <= 8.0,
              (r"02_Taschen\Profit", "10")),  # FR16
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 40.0 and
-                kl_r is not None and 0.0 <= kl_r <= 5.0 and
+                kl_r is not None and 4.01 <= kl_r <= 5.0 and
                 bbox_l is not None and 40.0 <= bbox_l <= 1000.0 and
                 bbox_b is not None and 40.0 <= bbox_b <= 1000.0,
              (r"02_Taschen\Profit", "09")),  # FR16-10
@@ -178,33 +178,33 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
         # --- Passung Fräsen ---
         # 
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 1.52 <= dia <= 2.5,   (r"06_Passung Fräsen", "01")),
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.51 <= dia <= 3.5,  (r"06_Passung Fräsen", "02")),
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 3.51 <= dia <= 4.5,  (r"06_Passung Fräsen", "03")),
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 4.51 <= dia <= 6.5,  (r"06_Passung Fräsen", "04")),
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 6.51 <= dia <= 8.5,  (r"06_Passung Fräsen", "05")),
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 8.51 <= dia <= 10.5, (r"06_Passung Fräsen", "06")),
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 10.51 <= dia <= 14.5,(r"06_Passung Fräsen", "07")),
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 14.51 <= dia <= 18.5,(r"06_Passung Fräsen", "08")),
-        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 12.51 <= dia <= 23.5,(r"06_Passung Fräsen", "09")), # 
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 1.52 <= dia <= 2.5,   (r"06_Passung Fräsen", "01")), #FR 1,5mm
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.51 <= dia <= 3.5,  (r"06_Passung Fräsen", "02")),  #FR 2mm
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 3.51 <= dia <= 4.5,  (r"06_Passung Fräsen", "03")),  #FR 3mm
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 4.51 <= dia <= 6.5,  (r"06_Passung Fräsen", "04")),  #FR 4mm
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 6.51 <= dia <= 8.5,  (r"06_Passung Fräsen", "05")),  #FR 5mm
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 8.51 <= dia <= 10.5, (r"06_Passung Fräsen", "06")),  #FR 6mm
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 10.51 <= dia <= 14.5,(r"06_Passung Fräsen", "07")),  #FR 8mm
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 14.51 <= dia <= 18.5,(r"06_Passung Fräsen", "08")),  #FR 10mm
+        (["passung fräsen"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 12.51 <= dia <= 23.5,(r"06_Passung Fräsen", "09")),  #FR 12mm
         
         (["passung fräsen"], # Für 16, spezifische Tiefen
          lambda res, dia, bbox_b, tief, bbox_l, kl_r:
-            dia is not None and 15.95 <= dia <= 16.05 and
-            tief is not None and 19.5 <= tief <= 20.5, # Spezifische Tiefe zuerst
-         (r"06_Passung Fräsen", "10")), # Z.B. Präfix für 16er
+            dia is not None and 23.51 <= dia <= 31.0 and
+            tief is not None and 0.0 <= tief <= 40.0, # zuerst
+         (r"06_Passung Fräsen", "10")), # Präfix für 16er
         
         (["passung fräsen"],
          lambda res, dia, bbox_b, tief, bbox_l, kl_r:
-            dia is not None and 15.95 <= dia <= 16.05 and
-            tief is not None and 51.5 <= tief <= 52.5,
-         (r"06_Passung Fräsen", "11")), # Z.B. Präfix für 16x52
+            dia is not None and 31.01 <= dia <= 39.0 and
+            tief is not None and 0.0 <= tief <= 40.0,
+         (r"06_Passung Fräsen", "11")), # Präfix für 16x52 20SL
         
         (["passung fräsen"],
          lambda res, dia, bbox_b, tief, bbox_l, kl_r:
-            dia is not None and 15.95 <= dia <= 16.05 and
-            tief is not None and tief <= 50.0, # Allgemeinere Tiefe für Ø16 zuletzt
-         (r"06_Passung Fräsen", "12")), # Z.B. Präfix für Standard 16er
+            dia is not None and 31.01 <= dia <= 39.0 and
+            tief is not None and 40.01 <= tief <= 52.0,
+         (r"06_Passung Fräsen", "13")), #
         
 
         # --- Bohrung KM (mit Senkung) ---
@@ -223,16 +223,19 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         # --- Trennen D80x3 ---
         (["trennen"],
          lambda res, dia, bbox_b, tief, bbox_l, kl_r: True,
-         (r"13_Trennen", "01")  # Hier das Tupel verwenden
+         (r"13_Trennen", "01")
         ),
 
 
         # --- Bohrung Allgemein ---
-        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia < 6.97,   (r"05_DGB", "01")), #bis 7
-        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 7.02 <= dia < 9.29,   (r"05_DGB", "01")), #ab  7
-        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 6.99 <= dia < 7.01,   (r"05_DGB", "03")), #nur 7
-        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 9.3 <= dia <= 17.5, (r"05_DGB", "02")),
-
+        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia < 6.97,   (r"05_DGB", "01")), #bis 7mm
+        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 7.02 <= dia < 9.29,   (r"05_DGB", "01")), #ab  7mm
+        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 6.99 <= dia < 7.01,   (r"05_DGB", "03")), #nur 7mm
+        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 9.3 <= dia <= 17.5, (r"05_DGB", "02")),   # 9,3-17,5mm
+        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 17.99 <= dia < 18.01, (r"05_DGB", "04")),  # WPB 18mm
+        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 19.99 <= dia < 20.01, (r"05_DGB", "05")),  # WPB 20mm
+        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 21.99 <= dia < 22.01, (r"05_DGB", "06")),  # WPB 22mm
+        (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 25.99 <= dia < 26.01, (r"05_DGB", "07")),  # WPB 26mm
 
         # --- Gewinde ---
         (["gewinde m", "gewinde"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia <= 7.0,  (r"03_Bohrungen", "03")), # M3-M8
