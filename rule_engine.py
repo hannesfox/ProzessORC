@@ -211,10 +211,11 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
 
         
-        # --- Bohrung Passung ---
-        #(["bohrung passung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 5.0 <= dia <= 10.0,  (r"Bohrungen", "01")), # Beispiel für Präfix
-        #(["bohrung passung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 11.0 <= dia <= 15.0, (r"Bohrungen", "02")),# Beispiel für Präfix
-        
+        # --- Trennen D80x3 ---
+        (["trennen"],
+         lambda res, dia, bbox_b, tief, bbox_l, kl_r: True,
+         (r"13_Trennen", "01")  # Hier das Tupel verwenden
+        ),
 
 
         # --- Bohrung Allgemein ---
