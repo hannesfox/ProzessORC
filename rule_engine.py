@@ -119,15 +119,61 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
 
         # --- Tasche Profit ---
-        ( 
-            ["tasche profit"],  
-            lambda res, dia, bbox_b, tief, bbox_l, kl_r: 
-                tief is not None and 30.0 <= tief <= 40.0 and
-                bbox_l is not None and 40.0 <= bbox_l <= 50.0 and
-                bbox_b is not None and 20.0 <= bbox_b <= 30.0 and
+        ( ["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 18.0 and
+                kl_r is not None and 0.0 <= kl_r <= 1.5 and
                 True, 
-            (r"02_Taschen\Profit", "11")  
-        ), # Komma, 
+            (r"02_Taschen\Profit", "01")),# FR03
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 21.0 and
+                kl_r is not None and 0.0 <= kl_r <= 2.0 and
+                True,
+            (r"02_Taschen\Profit", "02")),  # FR04
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 21.0 and
+                kl_r is not None and 0.0 <= kl_r <= 2.5 and
+                True,
+             (r"02_Taschen\Profit", "03")),  # FR05
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 20.0 and
+                kl_r is not None and 0.0 <= kl_r <= 3.0 and
+                True,
+             (r"02_Taschen\Profit", "04")),  # FR06
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 25.0 and
+                kl_r is not None and 0.0 <= kl_r <= 4.0 and
+                True,
+             (r"02_Taschen\Profit", "05")),  # FR08
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 40.0 and
+                kl_r is not None and 0.0 <= kl_r <= 5.0 and
+                True,
+             (r"02_Taschen\Profit", "07")),  # FR10
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 35.0 and
+                kl_r is not None and 0.0 <= kl_r <= 6.0 and
+                True,
+             (r"02_Taschen\Profit", "08")),  # FR12
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 45.0 and
+                kl_r is not None and 0.0 <= kl_r <= 8.0 and
+                True,
+             (r"02_Taschen\Profit", "10")),  # FR16
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 40.0 and
+                kl_r is not None and 0.0 <= kl_r <= 5.0 and
+                bbox_l is not None and 40.0 <= bbox_l <= 1000.0 and
+                bbox_b is not None and 40.0 <= bbox_b <= 1000.0,
+                True,
+             (r"02_Taschen\Profit", "09")),  # FR16-10
 
 
         # --- Passung Fräsen ---
