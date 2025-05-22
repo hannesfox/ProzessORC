@@ -14,7 +14,7 @@ import logging
 import ocr_recognition
 import rule_engine
 
-# Importiere
+# Importiere pytesseract
 from pytesseract import TesseractNotFoundError
 
 # --- Logging Konfiguration ---
