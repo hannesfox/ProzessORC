@@ -17,7 +17,7 @@ import logging
 
 # --- Logging  ---
 logger = logging.getLogger(__name__)
-if not logger.hasHandlers(): 
+if not logger.hasHandlers():
     logging.basicConfig(level=logging.INFO,
                         format='%(asctime)s - %(levelname)s - (%(module)s) - %(message)s')
 
@@ -83,11 +83,27 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
         logger.error("Ungültiges Graustufenbild an ocr_line_parse übergeben.")
         raise ValueError("Ungültiges Graustufenbild für OCR erhalten.")
 
+    # --- Beginn des Upscaling-Blocks ---
+    #
+    scale_factor = 1.5
+    logger.info(f"Upscaling Graustufenbild mit Faktor: {scale_factor}")
+
+    height, width = gray_img.shape
+    new_width = int(width * scale_factor)
+    new_height = int(height * scale_factor)
+
+
+    upscaled_gray_img = cv2.resize(gray_img, (new_width, new_height), interpolation=cv2.INTER_CUBIC)
+    logger.debug(f"Originalgröße: {width}x{height}, Skalierte Größe: {new_width}x{new_height}")
+
+    # --- Ende des Upscaling-Blocks ---
+
     config = f"--oem 3 --psm 4 --dpi 300 -l {TESS_LANG}"
     full_text = ""
     try:
-        full_text = pytesseract.image_to_string(gray_img, config=config)
-        logger.info(f"--- OCR Roh-Text ---\n{full_text}\n--------------------")
+        # Verwende das skalierte Bild für die OCR
+        full_text = pytesseract.image_to_string(upscaled_gray_img, config=config)
+        logger.info(f"--- OCR Roh-Text (nach Upscaling) ---\n{full_text}\n--------------------")
     except pytesseract.TesseractNotFoundError as tess_err:
         logger.error(f"Tesseract nicht gefunden oder Pfad falsch konfiguriert: {tess_err}")
         raise
@@ -98,7 +114,7 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
     results = {
         "Elementtyp": None, "Elementnummer": None, "Begrenzungsbox Breite": None,
         "Begrenzungsbox Länge": None, "Tiefe": None, "Durchmesser": None,
-        "Feature-Typ": None, "Name": None, "Kleinster Radius": None # NEU und funzt
+        "Feature-Typ": None, "Name": None, "Kleinster Radius": None
     }
     patterns = {
         "Elementtyp": r".*Elementtyp\s*[:.\-–\s|]*([^\n]+)",
@@ -109,7 +125,7 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
         "Begrenzungsbox Länge": r".*Begrenzungsbox\s+Länge\s*[:.\-–\s|]*([^\n]+)",
         "Feature-Typ": r".*(?:Feature|Festure|Feauture|Fenture)[-\s]*Typ\s*[:.\-–\s|]*([^\n]+)",
         "Name": r".*Name\s*[:.\-–\s|]*([^\n]+)",
-        "Kleinster Radius": r".*Kleinster\s+Radius\s*[:.\-–\s|]*([^\n]+)" # NEU und funzt
+        "Kleinster Radius": r".*Kleinster\s+Radius\s*[:.\-–\s|]*([^\n]+)"
     }
 
     def parse_number(value_str: str, format_str: str | None = "{:.3f}") -> str | None:
@@ -149,7 +165,7 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
                 continue
 
             match = re.search(pattern_str, line, re.IGNORECASE)
-            
+
             if match:
                 try:
                     raw_value = match.group(1).strip()
@@ -159,11 +175,11 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
 
                 parsed_value = None
 
-                if key in ["Tiefe", "Durchmesser", "Begrenzungsbox Breite", "Begrenzungsbox Länge", "Kleinster Radius"]: # "Kleinster Radius" HINZUGEFÜGT
-                    parsed_value = parse_number(raw_value, None if key == "Durchmesser" else "{:.6f}") # Format für Kleinster Radius auch .6f
+                if key in ["Tiefe", "Durchmesser", "Begrenzungsbox Breite", "Begrenzungsbox Länge", "Kleinster Radius"]:
+                    parsed_value = parse_number(raw_value, None if key == "Durchmesser" else "{:.6f}")
                     if key == "Durchmesser":
                         logger.info(f"DURCHMESSER-VERSUCH: Roh='{raw_value}', Geparsed='{parsed_value}' (Pattern='{pattern_str}', Zeile='{line}')")
-                
+
                 elif key == "Elementnummer":
                     if raw_value.isdigit():
                         parsed_value = raw_value
@@ -179,12 +195,12 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
                 if parsed_value is not None and parsed_value.strip() != "":
                     results[key] = parsed_value
                     processed_keys.add(key)
-                    
+
                     log_action = "Gefunden"
-                    if key in ["Tiefe", "Durchmesser", "Begrenzungsbox Breite", "Begrenzungsbox Länge", "Elementnummer", "Kleinster Radius"] and raw_value != parsed_value: # "Kleinster Radius" HINZUGEFÜGT
+                    if key in ["Tiefe", "Durchmesser", "Begrenzungsbox Breite", "Begrenzungsbox Länge", "Elementnummer", "Kleinster Radius"] and raw_value != parsed_value:
                         log_action += " & Geparsed"
                     logger.info(f"{log_action}: {key} = '{results[key]}' (Roh: '{raw_value}') in Zeile: '{line}'")
-                
+
                 elif key == "Durchmesser" and (parsed_value is None or parsed_value.strip() == ""):
                     logger.info(f"DURCHMESSER-VERWORFEN: Rohwert '{raw_value}' für Schlüssel '{key}' konnte nicht als gültige Zahl geparsed werden (Ergebnis: '{parsed_value}'). Zeile: '{line}'. Pattern: '{pattern_str}'")
 
