@@ -233,6 +233,24 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
          (r"13_Trennen", "01")
         ),
 
+        # --- Bohrung Allgemein mit Rückzug  --- kommt immer vor bohrung
+        (["bohrung rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia < 6.97,
+         (r"05_DGB\+DGB mit Rückzug", "01")),  # bis 7mm
+        (["bohrung rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 7.02 <= dia < 9.29,
+         (r"05_DGB\+DGB mit Rückzug", "01")),  # ab  7mm
+        (["bohrung rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 6.99 <= dia < 7.01,
+         (r"05_DGB\+DGB mit Rückzug", "03")),  # nur 7mm
+        (["bohrung rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 9.3 <= dia <= 17.5,
+         (r"05_DGB\+DGB mit Rückzug", "02")),  # 9,3-17,5mm
+        (["bohrung rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 17.99 <= dia < 18.01,
+         (r"05_DGB\+DGB mit Rückzug", "04")),  # WPB 18mm
+        (["bohrung rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 19.99 <= dia < 20.01,
+         (r"05_DGB\+DGB mit Rückzug", "05")),  # WPB 20mm
+        (["bohrung rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 21.99 <= dia < 22.01,
+         (r"05_DGB\+DGB mit Rückzug", "06")),  # WPB 22mm
+        (["bohrung rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 25.99 <= dia < 26.01,
+         (r"05_DGB\+DGB mit Rückzug", "07")),  # WPB 26mm
+
 
         # --- Bohrung Allgemein ---
         (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia < 6.97,   (r"05_DGB", "01")), #bis 7mm
@@ -243,6 +261,8 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 19.99 <= dia < 20.01, (r"05_DGB", "05")),  # WPB 20mm
         (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 21.99 <= dia < 22.01, (r"05_DGB", "06")),  # WPB 22mm
         (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 25.99 <= dia < 26.01, (r"05_DGB", "07")),  # WPB 26mm
+
+
 
         # --- Gewinde ---
         (["gewinde m", "gewinde"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia <= 7.0,  (r"03_Bohrungen", "03")), # M3-M8
