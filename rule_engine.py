@@ -90,14 +90,23 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
 
         # --- Plan ---
-        # Plan 42-62 16 20
+        # Plan 42-62 16 10
         (["plan"],
          lambda res, dia, bbox_b, tief, bbox_l, kl_r:
             tief is not None and 0.0 <= tief <= 40.0 and
-            kl_r is not None and 0.0 <= kl_r <= 20.0 and
+            kl_r is not None and any(abs(kl_r - val) < 1e-6 for val in [5.0]) and
             bbox_l is not None and 40.1 <= bbox_l <= 2000.0 and
             bbox_b is not None and 60.1 <= bbox_b <= 2000.0,
-         (r"01_Plan-Aussen-Fase-Tasche", "01")), 
+         (r"01_Plan-Aussen-Fase-Tasche", "05")),
+
+        # Plan 42-62 16 20
+        (["plan"],
+         lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+         tief is not None and 0.0 <= tief <= 40.0 and
+         kl_r is not None and any(abs(kl_r - val) < 1e-6 for val in [10.0, 0.2, 0.0]) and
+         bbox_l is not None and 40.1 <= bbox_l <= 2000.0 and
+         bbox_b is not None and 60.1 <= bbox_b <= 2000.0,
+         (r"01_Plan-Aussen-Fase-Tasche", "01")),
 
         # Plan 42-62 16x52 20
         (["plan"], 
