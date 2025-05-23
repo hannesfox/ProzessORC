@@ -175,6 +175,13 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
                 bbox_b is not None and 40.0 <= bbox_b <= 1000.0,
              (r"02_Taschen\Profit", "09")),  # FR16-10
 
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 40.0 and
+                kl_r is not None and 21.01 <= kl_r <= 200.0 and
+                bbox_l is not None and 40.0 <= bbox_l <= 2000.0 and
+                bbox_b is not None and 40.0 <= bbox_b <= 2000.0,
+             (r"02_Taschen\Profit", "11")),  # FR16-20 für runde taschen
+
 
         # --- Passung Fräsen ---
         # 
