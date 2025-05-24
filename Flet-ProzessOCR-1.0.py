@@ -37,8 +37,14 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
     #page.theme_mode = ft.ThemeMode.LIGHT
 
-    # ordner für Materialien
+    # ordner für Materialien mac test
     root_paths = [
+        #r"K:\Esprit\Prozesse\+1,7131( 1.1730, 1.8928, 1.2162 )",
+        #r"K:\Esprit\Prozesse\+1.2311(1.7225, 1.2344, 1.8519)",
+        #r"K:\Esprit\Prozesse\+1.2316 ( 1.2738, 1.2083,1.2842 )",
+        #r"K:\Esprit\Prozesse\+1.2379", r"K:\Esprit\Prozesse\+1.3343",
+        #r"K:\Esprit\Prozesse\+1.4112 Niro", r"K:\Esprit\Prozesse\+3.3547 ALU",
+        #r"K:\Esprit\Prozesse\+Kunststoff", r"K:\Esprit\Prozesse\+3D",
         r"K:\Esprit\Prozesse\+1,7131( 1.1730, 1.8928, 1.2162 )",
         r"K:\Esprit\Prozesse\+1.2311(1.7225, 1.2344, 1.8519)",
         r"K:\Esprit\Prozesse\+1.2316 ( 1.2738, 1.2083,1.2842 )",
