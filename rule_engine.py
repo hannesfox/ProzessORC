@@ -77,7 +77,25 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
     #
     # 
     base_rules = [
-        
+
+        # --- Nuten --- mit Rückzug muss immer vor nuten stehen !
+        #
+        (["nuten rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 3.1 <= bbox_b <= 4.0,
+         (r"07_NUTEN\NUTEN mit Rückzug", "01")),  # FR03
+        (["nuten rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 4.1 <= bbox_b <= 6.0,
+         (r"07_NUTEN\NUTEN mit Rückzug", "02")),
+        (["nuten rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 6.1 <= bbox_b <= 8.0,
+         (r"07_NUTEN\NUTEN mit Rückzug", "03")),
+        (["nuten rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 8.1 <= bbox_b <= 9.0,
+         (r"07_NUTEN\NUTEN mit Rückzug", "04")),
+        (["nuten rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 9.1 <= bbox_b <= 14.0,
+         (r"07_NUTEN\NUTEN mit Rückzug", "05")),
+        (["nuten rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 14.1 <= bbox_b <= 18.0,
+         (r"07_NUTEN\NUTEN mit Rückzug", "06")),
+        (["nuten rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 18.1 <= bbox_b <= 22.0,
+         (r"07_NUTEN\NUTEN mit Rückzug", "07")),  # FR12
+
+
         # --- Nuten ---
         # 
         (["nuten"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 3.1 <= bbox_b <= 4.0,  (r"07_NUTEN", "01")), # FR03
@@ -103,7 +121,7 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         (["plan"],
          lambda res, dia, bbox_b, tief, bbox_l, kl_r:
          tief is not None and 0.0 <= tief <= 40.0 and
-         kl_r is not None and any(abs(kl_r - val) < 1e-6 for val in [10.0, 0.2, 0.0]) and
+         kl_r is not None and any(abs(kl_r - val) < 1e-6 for val in [15.0, 10.0, 0.2, 0.0]) and
          bbox_l is not None and 40.0 <= bbox_l <= 2000.0 and
          bbox_b is not None and 40.0 <= bbox_b <= 2000.0,
          (r"01_Plan-Aussen-Fase-Tasche", "01")),
@@ -176,6 +194,14 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
                 tief is not None and 0.0 <= tief <= 45.0 and
                 kl_r is not None and 6.01 <= kl_r <= 8.0,
              (r"02_Taschen\Profit", "10")),  # FR16
+
+        (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
+                tief is not None and 0.0 <= tief <= 40.0 and
+                kl_r is not None and 5.0 <= kl_r <= 20.0 and
+                bbox_l is not None and 11.0 <= bbox_l <= 39.99 and
+                bbox_b is not None and 11.0 <= bbox_b <= 39.99,
+            (r"02_Taschen\Profit", "07")),  # FR 10 kleine tasche
+
 
         (["tasche profit"], lambda res, dia, bbox_b, tief, bbox_l, kl_r:
                 tief is not None and 0.0 <= tief <= 40.0 and
