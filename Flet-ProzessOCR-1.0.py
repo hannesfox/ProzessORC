@@ -34,7 +34,7 @@ def main(page: ft.Page):
     """Die Hauptfunktion, die die Flet-Anwendung initialisiert und ausführt."""
     page.title = "Flet-Prozess App"
     if page.platform in [ft.PagePlatform.WINDOWS, ft.PagePlatform.LINUX, ft.PagePlatform.MACOS]:
-        page.window.width = 650
+        page.window.width = 850
         page.window.height = 1050
         #page.window.center()
         page.window.top = 197  #pos für meinen rechner sonst 0
