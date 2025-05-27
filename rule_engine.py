@@ -297,7 +297,11 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 21.99 <= dia < 22.01, (r"05_DGB", "06")),  # WPB 22mm
         (["bohrung"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 25.99 <= dia < 26.01, (r"05_DGB", "07")),  # WPB 26mm
 
-
+        # --- Gewinde --- mit Rückzug muss immer vor gewinde stehen!
+        (["gewinde m rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia <= 7.0,
+         (r"03_Bohrungen\Bohrungen mit Rückzug", "03")),  # M3-M8
+        (["gewinde m rückzug"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 7.01 < dia <= 12.5,
+         (r"03_Bohrungen\Bohrungen mit Rückzug", "04")),  # M10-M12
 
         # --- Gewinde ---
         (["gewinde m", "gewinde"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia <= 7.0,  (r"03_Bohrungen", "03")), # M3-M8
