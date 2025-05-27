@@ -32,7 +32,7 @@ snackbar_lock = threading.Lock()
 
 def main(page: ft.Page):
     """Die Hauptfunktion, die die Flet-Anwendung initialisiert und ausführt."""
-    page.title = "Flet-Prozess App"
+    page.title = "ProzessKI-App "
     if page.platform in [ft.PagePlatform.WINDOWS, ft.PagePlatform.LINUX, ft.PagePlatform.MACOS]:
         page.window.width = 850
         page.window.height = 1050
@@ -121,9 +121,9 @@ def main(page: ft.Page):
     back_button = ft.ElevatedButton("⮜ Zurück", tooltip="Zum übergeordneten Ordner", disabled=True,
                                     on_click=lambda e: go_back())
     ocr_button = ft.ElevatedButton(
-        "📷 Scan & Select",
+        "📷 Scan Esprit Feature",
         icon=ft.Icons.CAMERA_ALT_OUTLINED,
-        tooltip="Scannt Bildschirmbereich, sucht Name/Durchmesser...",
+        tooltip="Scannt Esprit Eigenschaften, versucht passenden Prozess zu finden...",
         disabled=True,  # Der Button ist initial oft deaktiviert
         on_click=lambda e: start_ocr_process_thread(),
         # HIER DIE ÄNDERUNG FÜR DIE SCHRIFT-/ICONFARBE:
