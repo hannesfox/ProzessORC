@@ -33,10 +33,14 @@ snackbar_lock = threading.Lock()
 def main(page: ft.Page):
     """Die Hauptfunktion, die die Flet-Anwendung initialisiert und ausführt."""
     page.title = "Flet-Prozess App"
-    page.window_width = 850
-    page.window_height = 650
-    page.theme_mode = ft.ThemeMode.DARK
-    # page.theme_mode = ft.ThemeMode.LIGHT
+    if page.platform in [ft.PagePlatform.WINDOWS, ft.PagePlatform.LINUX, ft.PagePlatform.MACOS]:
+        page.window.width = 650
+        page.window.height = 1050
+        #page.window.center()
+        page.window.top = 197  #pos für meinen rechner sonst 0
+        page.window.left = 3435 #pos für meinen rechner sonst 0
+        page.theme_mode = ft.ThemeMode.DARK
+    #page.theme_mode = ft.ThemeMode.LIGHT
 
     # ordner für Materialien
     root_paths = [
