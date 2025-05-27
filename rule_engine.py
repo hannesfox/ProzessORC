@@ -307,15 +307,24 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         (["gewinde m", "gewinde"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 2.0 <= dia <= 7.0,  (r"03_Bohrungen", "03")), # M3-M8
         (["gewinde m", "gewinde"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 7.01 < dia <= 12.5, (r"03_Bohrungen", "04")), # M10-M12
 
+        # --- Reiben --- mit Rückzug muss immer vor reiben stehen!
+        (["reib ohne o rückzug"],
+         lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 3.0 <= dia <= 8.05, (r"03_Bohrungen\Bohrungen mit Rückzug", "05")),# reib ohne 4-8
+        (["reib ohne o rückzug"],
+         lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 10.0 <= dia <= 12.05, (r"03_Bohrungen\Bohrungen mit Rückzug", "06")),  # reib ohne 10-12
+        (["reib mit o rückzug"],
+         lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 3.0 <= dia <= 8.05, (r"03_Bohrungen\Bohrungen mit Rückzug", "01")), # reib mit 4-8
+        (["reib mit o rückzug"],
+         lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 10.0 <= dia <= 12.05, (r"03_Bohrungen\Bohrungen mit Rückzug", "02")),  # reib mit 10-12
 
         # --- Reiben ---
-        (["reib ohne o", "reiben ohne o"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 3.0 <= dia <= 8.05,   (r"03_Bohrungen", "05")), # reib ohne 4-8
-        (["reib ohne o", "reiben ohne o"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 10.0 <= dia <= 12.05, (r"03_Bohrungen", "06")), # reib ohne 10-12
-        (["reib mit o", "reiben mit o"],   lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 3.0 <= dia <= 8.05,   (r"03_Bohrungen", "01")), # reib mit 4-8
-        (["reib mit o", "reiben mit o"],   lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 10.0 <= dia <= 12.05, (r"03_Bohrungen", "02")), # reib mit 10-12
+        (["reib ohne o"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 3.0 <= dia <= 8.05,   (r"03_Bohrungen", "05")), # reib ohne 4-8
+        (["reib ohne o"], lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 10.0 <= dia <= 12.05, (r"03_Bohrungen", "06")), # reib ohne 10-12
+        (["reib mit o"],   lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 3.0 <= dia <= 8.05,   (r"03_Bohrungen", "01")), # reib mit 4-8
+        (["reib mit o"],   lambda res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 10.0 <= dia <= 12.05, (r"03_Bohrungen", "02")), # reib mit 10-12
     ]
 
-    keywords_requiring_exact_search_logic = {"reib mit o", "reiben mit o", "reib ohne o", "reiben ohne o"}
+    keywords_requiring_exact_search_logic = {"reib mit o", "reib ohne o", "reib ohne o", "reib ohne o"}
 
     logger.debug(f"--- Beginn Regelprüfung für Feature-Typ: '{feature_type_lower}' ---")
 
