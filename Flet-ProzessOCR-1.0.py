@@ -116,9 +116,17 @@ def main(page: ft.Page):
     listview = ft.ListView(expand=True, spacing=0, padding=5)
     back_button = ft.ElevatedButton("⮜ Zurück", tooltip="Zum übergeordneten Ordner", disabled=True,
                                     on_click=lambda e: go_back())
-    ocr_button = ft.ElevatedButton("📷 Scan & Select", icon=ft.Icons.CAMERA_ALT_OUTLINED,
-                                   tooltip="Scannt Bildschirmbereich, sucht Name/Durchmesser...", disabled=True,
-                                   on_click=lambda e: start_ocr_process_thread())
+    ocr_button = ft.ElevatedButton(
+        "📷 Scan & Select",
+        icon=ft.Icons.CAMERA_ALT_OUTLINED,
+        tooltip="Scannt Bildschirmbereich, sucht Name/Durchmesser...",
+        disabled=True,  # Der Button ist initial oft deaktiviert
+        on_click=lambda e: start_ocr_process_thread(),
+        # HIER DIE ÄNDERUNG FÜR DIE SCHRIFT-/ICONFARBE:
+        style=ft.ButtonStyle(
+            color=ft.Colors.CYAN_ACCENT_700  # Setzt die Vordergrundfarbe (Text und Icon)
+        )
+    )
 
     def close_dialog(dlg: ft.AlertDialog):
         """Schließt den übergebenen AlertDialog."""
@@ -193,7 +201,8 @@ def main(page: ft.Page):
                 if isinstance(control, ft.ListTile) and hasattr(control, 'data') and control.data:
                     control_data_norm = os.path.normpath(os.path.normcase(str(control.data)))
                     if control_data_norm == norm_highlight_path:
-                        control.bgcolor = ft.Colors.GREEN_ACCENT_700
+                        #control.bgcolor = ft.Colors.GREEN_ACCENT_700
+                        control.bgcolor = ft.Colors.CYAN_ACCENT_700
                         highlighted_tile = control
                         found_tile = control
                         highlight_applied = True
@@ -282,7 +291,7 @@ def main(page: ft.Page):
                     control_data_norm = os.path.normpath(os.path.normcase(str(control.data)))
                     if control_data_norm == norm_file_path:
                         logging.debug(f"Found matching tile for {filename}. Applying highlight.")
-                        control.bgcolor = ft.Colors.TEAL_ACCENT_700
+                        control.bgcolor = ft.Colors.DEEP_ORANGE_ACCENT_700
                         highlighted_tile = control
                         found_tile = control
                         break
@@ -573,7 +582,8 @@ def main(page: ft.Page):
                         if isinstance(control, ft.ListTile) and hasattr(control, 'data') and control.data:
                             control_data_norm = os.path.normpath(os.path.normcase(str(control.data)))
                             if control_data_norm == norm_target_path:
-                                control.bgcolor = ft.Colors.GREEN_ACCENT_700
+                                #control.bgcolor = ft.Colors.GREEN_ACCENT_700
+                                control.bgcolor = ft.Colors.CYAN_ACCENT_700
                                 highlighted_tile = control
                                 found_tile_direct = control
                                 logging.debug(f"Tile für '{filename}' direkt gefunden und hervorgehoben.")
