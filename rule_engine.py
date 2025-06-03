@@ -84,6 +84,25 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
     # --- Regeldefinitionen --------------------------------------------------------------------------
 
     base_rules = [
+
+        # --- Planen (kombinierte Regel) ---
+        (
+            ["plan"],
+            # Bedingungs-Lambda
+            lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+            tief is not None and 0.0 <= tief <= 40.0 and
+            kl_r is not None and any(abs(kl_r - val_kr) < 1e-6 for val_kr in [15.0, 10.0, 0.2, 0.0]) and
+            bbox_l is not None and 40.0 <= bbox_l <= 2000.0 and
+            bbox_b is not None and 40.0 <= bbox_b <= 2000.0,
+            # Aktions-Lambda
+            lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+            (
+                (r"01_Plan-Aussen-Fase-Tasche", "03") if "plan 10" in ft_lower else
+                (r"01_Plan-Aussen-Fase-Tasche", "02") if "plan 16" in ft_lower else
+                (r"01_Plan-Aussen-Fase-Tasche", "01")  # Default für "plan", "plan std" etc.
+            )
+        ),
+
         # --- Nuten --- mit Rückzug muss immer vor nuten stehen !
         (["nuten rückzug"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 3.1 <= bbox_b <= 4.0,
@@ -130,23 +149,7 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r: bbox_b is not None and 18.1 <= bbox_b <= 22.0,
          (r"07_NUTEN", "07")),
 
-        # --- Planen (kombinierte Regel) ---
-        (
-            ["plan"],
-            # Bedingungs-Lambda
-            lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-            tief is not None and 0.0 <= tief <= 40.0 and
-            kl_r is not None and any(abs(kl_r - val_kr) < 1e-6 for val_kr in [15.0, 10.0, 0.2, 0.0]) and
-            bbox_l is not None and 40.0 <= bbox_l <= 2000.0 and
-            bbox_b is not None and 40.0 <= bbox_b <= 2000.0,
-            # Aktions-Lambda
-            lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-            (
-                (r"01_Plan-Aussen-Fase-Tasche", "03") if "plan 10" in ft_lower else
-                (r"01_Plan-Aussen-Fase-Tasche", "02") if "plan 16" in ft_lower else
-                (r"01_Plan-Aussen-Fase-Tasche", "01")  # Default für "plan", "plan std" etc.
-            )
-        ),
+
 
         # --- Tasche Profit Offene Taschen mit Kleinster Radius erkennung---
 
@@ -265,14 +268,17 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         (["passung fräsen"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r: dia is not None and 12.51 <= dia <= 23.5,
          (r"06_Passung Fräsen", "09")),
+
         (["passung fräsen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         dia is not None and 23.51 <= dia <= 31.0 and
         tief is not None and 0.0 <= tief <= 40.0,
          (r"06_Passung Fräsen", "10")),
+
         (["passung fräsen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         dia is not None and 31.01 <= dia <= 39.0 and
         tief is not None and 0.0 <= tief <= 40.0,
          (r"06_Passung Fräsen", "11")),
+
         (["passung fräsen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         dia is not None and 31.01 <= dia <= 39.0 and
         tief is not None and 40.01 <= tief <= 52.0,
