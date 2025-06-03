@@ -88,21 +88,25 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         # --- Planen (kombinierte Regel) ---
         (["plan"],
             lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-            tief is not None and 0.0 <= tief <= 40.0 and
+            tief is not None and 0.0 <= tief <= 62.0 and
             bbox_b is not None and 0.0 < bbox_b <= 2000.0 and
             bbox_l is not None and 0.0 < bbox_l <= 2000.0,
             # Aktions-Lambda
             lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
             (r"01_Plan-Aussen-Fase-Tasche", "06") if (
-                    0.0 <= bbox_l <= 50.0 or  # Bereich für Länge
-                    0.0 <= bbox_b <= 60.0 or  # Bereich für Breite
-                    0.0 <= tief <= 40.0  # Bereich für Tiefe
+                    0.0 <= bbox_l <= 50.0 and  # X
+                    0.0 <= bbox_b <= 60.0 and  # Y
+                    0.0 <= tief <= 40.0  # Z
             ) else
 
             (r"01_Plan-Aussen-Fase-Tasche", "04") if (
-                    50.01 <= bbox_l <= 160.0 or
-                    0.0 <= bbox_b <= 60.0 or
+                    50.01 <= bbox_l <= 160.0 and
+                    0.0 <= bbox_b <= 45.0 and
                     0.0 <= tief <= 40.0
+            ) else
+
+            (r"01_Plan-Aussen-Fase-Tasche", "02") if (
+                    40.01 <= tief <= 52.0
             ) else
 
             (r"01_Plan-Aussen-Fase-Tasche", "03") if "plan 10" in ft_lower else # Depo 16 - 10
