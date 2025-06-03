@@ -39,8 +39,8 @@ def main(page: ft.Page):
         #page.window.center()
         page.window.top = 197  #pos für meinen rechner sonst 0
         page.window.left = 3435 #pos für meinen rechner sonst 0
-        page.theme_mode = ft.ThemeMode.DARK
-    #page.theme_mode = ft.ThemeMode.LIGHT
+        #page.theme_mode = ft.ThemeMode.DARK
+        page.theme_mode = ft.ThemeMode.LIGHT
 
     # ordner für Materialien
     root_paths = [
