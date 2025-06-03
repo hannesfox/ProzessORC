@@ -149,69 +149,62 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         ),
 
         # --- Tasche Profit Offene Taschen mit Kleinster Radius erkennung---
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 18.0 and
         kl_r is not None and 0.0 <= kl_r <= 1.5,
-         (r"02_Taschen\Profit", "01")),
+         (r"02_Taschen\Profit", "01")), #FR03
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 21.0 and
         kl_r is not None and 1.51 <= kl_r <= 2.0,
-         (r"02_Taschen\Profit", "02")),
+         (r"02_Taschen\Profit", "02")), #FR04
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 21.0 and
         kl_r is not None and 2.01 <= kl_r <= 2.5,
-         (r"02_Taschen\Profit", "03")),
+         (r"02_Taschen\Profit", "03")), #FR05
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 20.0 and
         kl_r is not None and 2.51 <= kl_r <= 3.0,
-         (r"02_Taschen\Profit", "04")),
+         (r"02_Taschen\Profit", "04")), #FR06
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 25.0 and
         kl_r is not None and 3.01 <= kl_r <= 4.0,
-         (r"02_Taschen\Profit", "05")),
+         (r"02_Taschen\Profit", "05")), #FR08
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 40.0 and
         kl_r is not None and 4.01 <= kl_r <= 5.0,
-         (r"02_Taschen\Profit", "07")),
+         (r"02_Taschen\Profit", "07")), #FR10
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 35.0 and
         kl_r is not None and 5.01 <= kl_r <= 6.0,
-         (r"02_Taschen\Profit", "08")),
+         (r"02_Taschen\Profit", "08")), #FR12
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 45.0 and
-        kl_r is not None and 6.01 <= kl_r <= 8.0,
-         (r"02_Taschen\Profit", "10")),
-
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 40.0 and
-        kl_r is not None and 5.0 <= kl_r <= 20.0 and
-        bbox_l is not None and 11.0 <= bbox_l <= 39.99 and
-        bbox_b is not None and 11.0 <= bbox_b <= 39.99,
-         (r"02_Taschen\Profit", "07")),
+        kl_r is not None and 6.01 <= kl_r <= 9.99,
+         (r"02_Taschen\Profit", "10")), #FR16-16SL
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 40.0 and
-        kl_r is not None and 4.01 <= kl_r <= 5.0 and
-        bbox_l is not None and 40.0 <= bbox_l <= 1000.0 and
-        bbox_b is not None and 40.0 <= bbox_b <= 1000.0,
-         (r"02_Taschen\Profit", "09")),
+        kl_r is not None and 10.0 <= kl_r <= 200.0,
+         (r"02_Taschen\Profit", "11")),  # FR16-20SL
 
-        (["tasche profit offen"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 40.0 and
-        kl_r is not None and 21.01 <= kl_r <= 200.0 and
-        bbox_l is not None and 40.0 <= bbox_l <= 2000.0 and
-        bbox_b is not None and 40.0 <= bbox_b <= 2000.0,
-         (r"02_Taschen\Profit", "11")),
+        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 40.01 <= tief <= 52.0 and
+        kl_r is not None and 10.0 <= kl_r <= 200.0,
+         (r"02_Taschen\Profit", "14")),  # FR16x52-20SL
 
 
-        #Tasche Profit auswahl anhand Taschengröße und tiefe
+
+
+        #------------Tasche Profit auswahl anhand Taschengröße und tiefe----------------
+
         (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 18.0 and
         bbox_l is not None and 0.0 <= bbox_l <= 10.0 and
