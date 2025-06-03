@@ -86,21 +86,28 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
     base_rules = [
 
         # --- Planen (kombinierte Regel) ---
-        (
-            ["plan"],
-            # Bedingungs-Lambda
+        (["plan"],
             lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
             tief is not None and 0.0 <= tief <= 40.0 and
-            kl_r is not None and any(abs(kl_r - val_kr) < 1e-6 for val_kr in [15.0, 10.0, 0.2, 0.0]) and
-            bbox_l is not None and 40.0 <= bbox_l <= 2000.0 and
-            bbox_b is not None and 40.0 <= bbox_b <= 2000.0,
+            bbox_b is not None and 0.0 < bbox_b <= 2000.0 and
+            bbox_l is not None and 0.0 < bbox_l <= 2000.0,
             # Aktions-Lambda
             lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-            (
-                (r"01_Plan-Aussen-Fase-Tasche", "03") if "plan 10" in ft_lower else
-                (r"01_Plan-Aussen-Fase-Tasche", "02") if "plan 16" in ft_lower else
-                (r"01_Plan-Aussen-Fase-Tasche", "01")  # Default für "plan", "plan std" etc.
-            )
+            (r"01_Plan-Aussen-Fase-Tasche", "06") if (
+                    0.0 <= bbox_l <= 50.0 or  # Bereich für Länge
+                    0.0 <= bbox_b <= 60.0 or  # Bereich für Breite
+                    0.0 <= tief <= 40.0  # Bereich für Tiefe
+            ) else
+
+            (r"01_Plan-Aussen-Fase-Tasche", "04") if (
+                    50.01 <= bbox_l <= 160.0 or
+                    0.0 <= bbox_b <= 60.0 or
+                    0.0 <= tief <= 40.0
+            ) else
+
+            (r"01_Plan-Aussen-Fase-Tasche", "03") if "plan 10" in ft_lower else # Depo 16 - 10
+            (r"01_Plan-Aussen-Fase-Tasche", "07") if "plan 16" in ft_lower else # Depo 16 - 16
+            (r"01_Plan-Aussen-Fase-Tasche", "01")  # Depo 16 - 20
         ),
 
         # --- Nuten --- mit Rückzug muss immer vor nuten stehen !
