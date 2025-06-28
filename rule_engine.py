@@ -16,6 +16,8 @@ import os
 import logging
 import re
 
+from sympy import andre
+
 # --- Logging Konfiguration ---
 logger = logging.getLogger(__name__)
 if not logger.hasHandlers():
@@ -248,6 +250,14 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         bbox_l is not None and 30.01 <= bbox_l <= 2000.0 and
         bbox_b is not None and 30.01 <= bbox_b <= 2000.0,
          (r"02_Taschen\Profit", "14")),  # FR 16 -20SL
+
+        #Sondertasche
+        (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 0.0 <= tief <= 25.0 and
+        bbox_l is not None and 50.0 <= bbox_l <= 2000.0 and
+        bbox_b is not None and 10.0 <= bbox_b <= 2000.0 and
+        kl_r is not None and 2.5 <= kl_r <= 5.0,
+         (r"02_Taschen\Profit", "06")),  # FR 10 FR 05
 
 
 

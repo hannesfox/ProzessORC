@@ -96,9 +96,10 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
     upscaled_gray_img = cv2.resize(gray_img, (new_width, new_height), interpolation=cv2.INTER_CUBIC)
     logger.debug(f"Originalgröße: {width}x{height}, Skalierte Größe: {new_width}x{new_height}")
 
+
     # --- Ende des Upscaling-Blocks ---
 
-    config = f"--oem 3 --psm 4 --dpi 300 -l {TESS_LANG}"
+    config = f"--oem 3 --psm 4 --dpi 300 -l {TESS_LANG}"   #4 war gut
     full_text = ""
     try:
         # Verwende das skalierte Bild für die OCR

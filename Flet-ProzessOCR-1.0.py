@@ -50,6 +50,8 @@ def main(page: ft.Page):
         r"K:\Esprit\Prozesse\+1.2379", r"K:\Esprit\Prozesse\+1.3343",
         r"K:\Esprit\Prozesse\+1.4112 Niro", r"K:\Esprit\Prozesse\+3.3547 ALU",
         r"K:\Esprit\Prozesse\+Kunststoff", r"K:\Esprit\Prozesse\+3D",
+        r"K:\Esprit\Prozesse\+Kunststoff", r"K:\Esprit\Prozesse\Gschwendtner",
+        r"K:\Esprit\Prozesse\+Kunststoff", r"K:\Esprit\Prozesse\IFW Prozesse für Kulissen",
     ]
     path_stack: list[str] = []
 
