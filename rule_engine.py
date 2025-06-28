@@ -166,79 +166,81 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
         # --- Tasche Profit Offene Taschen mit Kleinster Radius erkennung---
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        # FR03 (D3 -> R1.5): Kann Ecken > 1.5mm bearbeiten. Zuständig für den Bereich 1.51 - 2.0.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 18.0 and
-        kl_r is not None and 0.0 <= kl_r <= 1.5,
-         (r"02_Taschen\Profit", "01")), #FR03
-
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 21.0 and
         kl_r is not None and 1.51 <= kl_r <= 2.0,
-         (r"02_Taschen\Profit", "02")), #FR04
+         (r"02_Taschen\Profit", "01")),  # -> WÄHLT FR03 (D3)
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        # FR04 (D4 -> R2.0): Kann Ecken > 2.0mm bearbeiten. Zuständig für den Bereich 2.01 - 2.5.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 21.0 and
         kl_r is not None and 2.01 <= kl_r <= 2.5,
-         (r"02_Taschen\Profit", "03")), #FR05
+         (r"02_Taschen\Profit", "02")),  # -> WÄHLT FR04 (D4)
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 20.0 and
+        # FR05 (D5 -> R2.5): Kann Ecken > 2.5mm bearbeiten. Zuständig für den Bereich 2.51 - 3.0.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 0.0 <= tief <= 21.0 and
         kl_r is not None and 2.51 <= kl_r <= 3.0,
-         (r"02_Taschen\Profit", "04")), #FR06
+         (r"02_Taschen\Profit", "03")),  # -> WÄHLT FR05 (D5)
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 25.0 and
+        # FR06 (D6 -> R3.0): Kann Ecken > 3.0mm bearbeiten. Zuständig für den Bereich 3.01 - 4.0.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 0.0 <= tief <= 20.0 and
         kl_r is not None and 3.01 <= kl_r <= 4.0,
-         (r"02_Taschen\Profit", "05")), #FR08
+         (r"02_Taschen\Profit", "04")),  # -> WÄHLT FR06 (D6)
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 40.0 and
+        # FR08 (D8 -> R4.0): Kann Ecken > 4.0mm bearbeiten. Zuständig für den Bereich 4.01 - 5.0.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 0.0 <= tief <= 25.0 and
         kl_r is not None and 4.01 <= kl_r <= 5.0,
-         (r"02_Taschen\Profit", "07")), #FR10
+         (r"02_Taschen\Profit", "05")),  # -> WÄHLT FR08 (D8)
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 35.0 and
+        # FR10 (D10 -> R5.0): Kann Ecken > 5.0mm bearbeiten. Zuständig für den Bereich 5.01 - 6.0.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 0.0 <= tief <= 40.0 and
         kl_r is not None and 5.01 <= kl_r <= 6.0,
-         (r"02_Taschen\Profit", "08")), #FR12
+         (r"02_Taschen\Profit", "07")),  # -> WÄHLT FR10 (D10)
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        # FR12 (D12 -> R6.0): Kann Ecken > 6.0mm bearbeiten. Zuständig für den Bereich 6.01 - 8.0.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 0.0 <= tief <= 35.0 and
+        kl_r is not None and 6.01 <= kl_r <= 8.0,  # Annahme: nächster Fräser ist D16
+         (r"02_Taschen\Profit", "08")),  # -> WÄHLT FR12 (D12)
+
+        # FR16 (D16 -> R8.0): Kann Ecken > 8.0mm bearbeiten. Zuständig für den Bereich 8.01 - 10.0.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 40.0 and
-        kl_r is not None and 6.01 <= kl_r <= 9.99,
-         (r"02_Taschen\Profit", "10")), #FR16-16SL
+        kl_r is not None and 8.01 <= kl_r <= 10.0,  # Annahme: nächster Fräser ist D20
+         (r"02_Taschen\Profit", "10")),  # -> WÄHLT FR16 (D16)
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        # FR20 (D20 -> R10.0): Kann Ecken > 10.0mm bearbeiten. Zuständig für alle größeren Radien.
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 40.0 and
-        kl_r is not None and 10.0 <= kl_r <= 200.0,
-         (r"02_Taschen\Profit", "11")),  # FR16-20SL
+        kl_r is not None and kl_r > 10.0,  # Größer als 10mm
+         (r"02_Taschen\Profit", "11")),  # -> WÄHLT FR20 (D20)
 
-        (["tasche profit box"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        # Sonderregel für sehr tiefe Taschen mit großen Radien
+        (["tasche profit radius"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 40.01 <= tief <= 52.0 and
-        kl_r is not None and 10.0 <= kl_r <= 200.0,
-         (r"02_Taschen\Profit", "14")),  # FR16x52-20SL
+        kl_r is not None and kl_r > 10.0,
+         (r"02_Taschen\Profit", "14")),  # -> WÄHLT FR20x52 (D20 Langversion)
 
 
 
 
         #------------Tasche Profit auswahl anhand Taschengröße und tiefe----------------
 
+        # Sondertasche mit Radius
         (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 18.0 and
-        bbox_l is not None and 0.0 <= bbox_l <= 10.0 and
-        bbox_b is not None and 0.0 <= bbox_b <= 10.0,
-         (r"02_Taschen\Profit", "01")),  #FR 03
+        tief is not None and 0.0 <= tief <= 25.0 and
+        bbox_l is not None and 10.0 <= bbox_l <= 2000.0 and
+        bbox_b is not None and 10.0 <= bbox_b <= 2000.0 and
+        kl_r is not None and 2.5 <= kl_r <= 4.98,
+         (r"02_Taschen\Profit", "06")),  # FR 10 FR 05
 
-        (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 21.0 and
-        bbox_l is not None and 10.01 <= bbox_l <= 15.0 and
-        bbox_b is not None and 10.01 <= bbox_b <= 15.0,
-         (r"02_Taschen\Profit", "03")),  # FR 05
 
-        (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 40.0 and
-        bbox_l is not None and 15.01 <= bbox_l <= 30.0 and
-        bbox_b is not None and 15.01 <= bbox_b <= 30.0,
-         (r"02_Taschen\Profit", "07")),  # FR 10
-
+        # Standard taschen
         (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
         tief is not None and 0.0 <= tief <= 40.0 and
         bbox_l is not None and 30.01 <= bbox_l <= 2000.0 and
@@ -251,13 +253,23 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         bbox_b is not None and 30.01 <= bbox_b <= 2000.0,
          (r"02_Taschen\Profit", "14")),  # FR 16 -20SL
 
-        #Sondertasche
         (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
-        tief is not None and 0.0 <= tief <= 25.0 and
-        bbox_l is not None and 50.0 <= bbox_l <= 2000.0 and
-        bbox_b is not None and 10.0 <= bbox_b <= 2000.0 and
-        kl_r is not None and 2.5 <= kl_r <= 5.0,
-         (r"02_Taschen\Profit", "06")),  # FR 10 FR 05
+        tief is not None and 0.0 <= tief <= 40.0 and
+        bbox_l is not None and 15.01 <= bbox_l <= 30.0 and
+        bbox_b is not None and 15.01 <= bbox_b <= 30.0,
+         (r"02_Taschen\Profit", "07")),  # FR 10
+
+        (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 0.0 <= tief <= 21.0 and
+        bbox_l is not None and 10.01 <= bbox_l <= 15.0 and
+        bbox_b is not None and 10.01 <= bbox_b <= 15.0,
+         (r"02_Taschen\Profit", "03")),  # FR 05
+
+        (["tasche profit"], lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r:
+        tief is not None and 0.0 <= tief <= 18.0 and
+        bbox_l is not None and 0.0 <= bbox_l <= 10.0 and
+        bbox_b is not None and 0.0 <= bbox_b <= 10.0,
+         (r"02_Taschen\Profit", "01")),  #FR 03
 
 
 

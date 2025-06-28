@@ -132,7 +132,7 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
         "Durchmesser": r"^(?:[^\S\n]*(?:Durchmesser|Duahmaser|Duchmesser|Durchmeser|Bohezurchmaser|Durngangg|Boden))\s*[:.\-–\s|]*([^\n]+)",
         "Begrenzungsbox Breite": r".*Begrenzungsbox\s+Breite\s*[:.\-–\s|]*([^\n]+)",
         "Begrenzungsbox Länge": r".*Begrenzungsbox\s+Länge\s*[:.\-–\s|]*([^\n]+)",
-        "Feature-Typ": r".*(?:F?eature|Festure|Feauture|Fenture)[-\s]*Typ\s*[:.\-–\s|]*([^\n]+)",
+        "Feature-Typ": r".*F?eature[-\s]*Typ\s*[:.\-–\s|]*([^\n]*)",
         "Name": r".*Name\s*[:.\-–\s|]*([^\n]+)",
         "Kleinster Radius": r".*Kleinster\s+Radius\s*[:.\-–\s|]*([^\n]+)"
     }
@@ -153,29 +153,87 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
                 return num_str  # Gib den gefundenen String zurück, wenn er keine Zahl ist
         return cleaned_str if value_str.strip() else None
 
+    # --- NEUER, ROBUSTERER PARSING-LOOP ---
     lines = full_text_pass1.splitlines()
     processed_keys = set()
-    for line in lines:
+    last_key_found = None  # Merkt sich den Schlüssel aus der vorherigen Zeile
+
+    for i, line in enumerate(lines):
         line = line.strip()
-        if not line: continue
+        if not line:
+            last_key_found = None  # Zeilenumbruch setzt den Kontext zurück
+            continue
+
+        found_match_in_line = False
         for key, pattern_str in patterns.items():
-            if key in processed_keys and results[key] is not None: continue
+            if key in processed_keys:
+                continue
+
             match = re.search(pattern_str, line, re.IGNORECASE)
             if match:
-                raw_value = match.group(1).strip()
-                parsed_value = None
-                if key in ["Tiefe", "Durchmesser", "Begrenzungsbox Breite", "Begrenzungsbox Länge", "Kleinster Radius"]:
-                    parsed_value = parse_number(raw_value, None if key == "Durchmesser" else "{:.6f}")
-                elif key == "Elementnummer":
-                    parsed_value = re.search(r"(\d+)", raw_value).group(1) if re.search(r"(\d+)",
-                                                                                        raw_value) else raw_value
-                else:
-                    parsed_value = raw_value if raw_value else None
+                found_match_in_line = True
+                try:
+                    raw_value = match.group(1).strip()
+                    # WENN der Wert direkt gefunden wird (Standardfall)
+                    if raw_value:
+                        # Hier kommt Ihre bekannte Parsing-Logik rein
+                        parsed_value = None
+                        if key in ["Tiefe", "Durchmesser", "Begrenzungsbox Breite", "Begrenzungsbox Länge",
+                                   "Kleinster Radius"]:
+                            parsed_value = parse_number(raw_value, None if key == "Durchmesser" else "{:.6f}")
+                        elif key == "Elementnummer":
+                            num_match = re.search(r"(\d+)", raw_value)
+                            parsed_value = num_match.group(1) if num_match else raw_value
+                        else:
+                            parsed_value = raw_value
 
-                if parsed_value is not None and str(parsed_value).strip() != "":
-                    results[key] = str(parsed_value)
-                    processed_keys.add(key)
-                    logger.info(f"Gefunden (Durchlauf 1): {key} = '{results[key]}' (Roh: '{raw_value}')")
+                        if parsed_value is not None and str(parsed_value).strip():
+                            results[key] = str(parsed_value)
+                            processed_keys.add(key)
+                            logger.info(f"Gefunden (gleiche Zeile): {key} = '{results[key]}' (Roh: '{raw_value}')")
+                            last_key_found = None  # Erfolgreich, Kontext zurücksetzen
+                        else:
+                            # Schlüssel gefunden, aber Wert ist leer -> Merken für die nächste Zeile
+                            last_key_found = key
+                            logger.debug(
+                                f"Schlüssel '{key}' in Zeile '{line}' gefunden, aber Wert ist leer. Suche in nächster Zeile...")
+                    else:
+                        # Schlüssel gefunden, aber die Capturing-Group ist leer -> Merken für die nächste Zeile
+                        last_key_found = key
+                        logger.debug(
+                            f"Schlüssel '{key}' in Zeile '{line}' gefunden, aber Wert ist leer. Suche in nächster Zeile...")
+
+                except IndexError:
+                    # Das Pattern hat gepasst, aber keine Capturing-Group -> Merken für die nächste Zeile
+                    last_key_found = key
+                    logger.debug(
+                        f"Schlüssel '{key}' in Zeile '{line}' gefunden (ohne Wert). Suche in nächster Zeile...")
+                break  # Nur ein Schlüssel pro Zeile
+
+        # WENN in dieser Zeile kein Schlüssel-Wert-Paar gefunden wurde,
+        # ABER in der vorherigen Zeile ein Schlüssel stand:
+        if not found_match_in_line and last_key_found:
+            key = last_key_found
+            raw_value = line  # Die ganze Zeile ist der potenzielle Wert
+
+            logger.info(f"Versuche, Wert für Schlüssel '{key}' aus vorheriger Zeile in Zeile '{line}' zu finden.")
+
+            # Hier kommt wieder Ihre Parsing-Logik für den gefundenen Wert
+            parsed_value = None
+            if key in ["Tiefe", "Durchmesser", "Begrenzungsbox Breite", "Begrenzungsbox Länge", "Kleinster Radius"]:
+                parsed_value = parse_number(raw_value, None if key == "Durchmesser" else "{:.6f}")
+            elif key == "Elementnummer":
+                num_match = re.search(r"(\d+)", raw_value)
+                parsed_value = num_match.group(1) if num_match else raw_value
+            else:  # Das ist unser Fall für "Feature-Typ"
+                parsed_value = raw_value
+
+            if parsed_value is not None and str(parsed_value).strip():
+                results[key] = str(parsed_value)
+                processed_keys.add(key)
+                logger.info(f"Gefunden (nächste Zeile): {key} = '{results[key]}' (Roh: '{raw_value}')")
+
+            last_key_found = None  # Kontext zurücksetzen, egal ob erfolgreich oder nicht
 
     # --- 2. PRÜFUNG AUF PROBLEM-FALL & GEZIELTE KORREKTUR ---
     # Prüfen, ob der bekannte Fehler bei "Begrenzungsbox Länge" aufgetreten ist.
