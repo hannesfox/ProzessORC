@@ -129,10 +129,10 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
         "Elementtyp": r".*Elementtyp\s*[:.\-–\s|]*([^\n]+)",
         "Elementnummer": r".*Elementnummer\s*[:.\-–\s|]*(\d+)",
         "Tiefe": r".*Tiefe\s*[:.\-–\s|]*,?\s*([^\n]+)",
-        "Durchmesser": r"^(?:[^\S\n]*(?:Durchmesser|Duahmaser|Duchmesser|Durchmeser|Bohezurchmaser|Durngangg|Boden))\s*[:.\-–\s|]*([^\n]+)",
+        "Durchmesser": r".*(?:Durchmesser|Duahmaser|Duchmesser|Durchmeser|Bohezurchmaser|Durngangg|Boden)\s*[:.\-–\s|]*([^\n]+)",
         "Begrenzungsbox Breite": r".*Begrenzungsbox\s+Breite\s*[:.\-–\s|]*([^\n]+)",
         "Begrenzungsbox Länge": r".*Begrenzungsbox\s+Länge\s*[:.\-–\s|]*([^\n]+)",
-        "Feature-Typ": r".*F?eature[-\s]*Typ\s*[:.\-–\s|]*([^\n]*)",
+        "Feature-Typ": r".*(?:KnowledgeBase|i\.)?\s*F?eature[-\s]*Typ\s*[:.\-–\s|]*([^\n]*)",
         "Name": r".*Name\s*[:.\-–\s|]*([^\n]+)",
         "Kleinster Radius": r".*Kleinster\s+Radius\s*[:.\-–\s|]*([^\n]+)"
     }
@@ -161,7 +161,7 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
     for i, line in enumerate(lines):
         line = line.strip()
         if not line:
-            last_key_found = None  # Zeilenumbruch setzt den Kontext zurück
+            #last_key_found = None  # Zeilenumbruch setzt den Kontext zurück
             continue
 
         found_match_in_line = False
