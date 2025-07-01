@@ -17,6 +17,15 @@ import rule_engine
 # Importiere pytesseract
 from pytesseract import TesseractNotFoundError
 
+#prozess import
+import prozess
+try:
+    import pyautogui
+    from threading import Thread
+except ImportError:
+    logging.critical("Pyautogui nicht gefunden. Hotkey-Automatisierung wird nicht funktionieren.")
+    pyautogui = None # App stürzt nicht ab, wenn es fehlt
+
 # --- Logging Konfiguration ---
 logging.basicConfig(level=logging.INFO,  # Hauptlevel
                     format='%(asctime)s - %(levelname)s - (%(module)s) - %(message)s')
@@ -26,6 +35,59 @@ current_material_root_path: str | None = None
 highlighted_tile: ft.ListTile | None = None
 snackbar_queue = []
 snackbar_lock = threading.Lock()
+
+
+# --- PyAutoGUI Automatisierungslogik ---
+
+def _process_images_in_thread():
+    """Sucht nacheinander nach zwei Bildern und klickt sie an."""
+    if not pyautogui: return
+    try:
+        # KORREKTUR: logger -> logging
+        logging.info("Suche nach 'image1.png'...")
+        image_pos = pyautogui.locateOnScreen('image1.png', confidence=0.7, grayscale=True)
+        if image_pos:
+            pyautogui.click(pyautogui.center(image_pos))
+            logging.info("'image1.png' gefunden und geklickt.")
+            time.sleep(0.05)
+        else:
+            logging.warning("'image1.png' nicht auf dem Bildschirm gefunden.")
+
+        logging.info("Suche nach 'image2.png'...")
+        image_pos = pyautogui.locateOnScreen('image2.png', confidence=0.7, grayscale=True)
+        if image_pos:
+            pyautogui.click(pyautogui.center(image_pos))
+            logging.info("'image2.png' gefunden und geklickt.")
+            time.sleep(0.05)
+        else:
+            logging.warning("'image2.png' nicht auf dem Bildschirm gefunden.")
+
+    except pyautogui.ImageNotFoundException:
+        logging.warning("Eines der Bilder wurde während der Suche nicht gefunden (ImageNotFoundException).")
+    except Exception as e:
+        logging.error(f"Fehler bei der Bilderkennung im Thread: {e}", exc_info=True)
+
+
+def execute_pyautogui_sequence():
+    """Führt die definierte pyautogui-Automatisierungssequenz aus."""
+    if not pyautogui: return
+    # KORREKTUR: logger -> logging
+    logging.info("Starte pyautogui-Automatisierungssequenz nach erfolgreichem OCR...")
+    try:
+        pyautogui.rightClick()
+        time.sleep(0.05)
+
+        image_thread = Thread(target=_process_images_in_thread, daemon=True)
+        image_thread.start()
+        image_thread.join(timeout=5.0)
+
+        pyautogui.hotkey('ctrl', 'v')
+        time.sleep(0.2)
+        pyautogui.press('enter')
+
+        logging.info("Pyautogui-Sequenz erfolgreich abgeschlossen.")
+    except Exception as e:
+        logging.error(f"Fehler während der pyautogui-Automatisierung: {e}", exc_info=True)
 
 
 # --- Flet App  ---
@@ -615,6 +677,13 @@ def main(page: ft.Page):
                     logging.error("Interner Fehler: Aktuelles oder Zielverzeichnis konnte nicht bestimmt werden.")
                     _show_snackbar_message(page_ref, "❌ Interner Fehler: Verzeichnisinformation fehlt.", error=True)
 
+                    # --- NEUER AUFRUF NACH ERFOLGREICHEM OCR ---
+                    # Unabhängig davon, ob navigiert wurde oder nicht, wenn ein Pfad gefunden wurde,
+                    # führen wir die Automatisierung aus.
+                logging.info("OCR war erfolgreich, starte jetzt die pyautogui-Sequenz.")
+                execute_pyautogui_sequence()
+                    # --- ENDE NEUER AUFRUF ---
+
             except pyperclip.PyperclipException as clip_err:
                 logging.error(f"Fehler beim Kopieren in die Zwischenablage nach OCR: {clip_err}")
                 _show_snackbar_message(page_ref, "❌ Fehler: Zwischenablage nicht verfügbar.", error=True, duration=4000)
@@ -661,6 +730,14 @@ def main(page: ft.Page):
     )
     # Initialer Tooltip für den Header
     header.tooltip = "Wähle einen Material-Wurzelordner aus dem Menü."
+
+    logging.info("Initialisiere und starte den systemweiten Hotkey-Listener...")
+    hotkey_thread = threading.Thread(
+        target=prozess.start_hotkey_listener,
+        args=(start_ocr_process_thread,),  # WICHTIG: Die Funktion wird hier übergeben!
+        daemon=True
+    )
+    hotkey_thread.start()
 
     logging.info("Flet App initialisiert. Warte auf Benutzerauswahl eines Material-Ordners.")
     page.update()
