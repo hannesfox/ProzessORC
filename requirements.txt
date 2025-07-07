@@ -1,0 +1,9 @@
+keyboard~=0.13.5
+psutil~=7.0.0
+sympy~=1.14.0
+opencv-python~=4.11.0.86
+numpy~=2.3.1
+pytesseract~=0.3.13
+pillow~=11.3.0
+flet~=0.28.3
+pyperclip~=1.9.0
