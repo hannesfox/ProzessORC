@@ -123,6 +123,7 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
     results = {
         "Elementtyp": None, "Elementnummer": None, "Begrenzungsbox Breite": None,
         "Begrenzungsbox Länge": None, "Tiefe": None, "Durchmesser": None,
+        "Fasendurchmesser": None,
         "Feature-Typ": None, "Name": None, "Kleinster Radius": None
     }
     patterns = {
@@ -134,7 +135,9 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
         "Begrenzungsbox Länge": r".*Begrenzungsbox\s+Länge\s*[:.\-–\s|]*([^\n]+)",
         "Feature-Typ": r".*(?:KnowledgeBase|i\.)?\s*F?eature[-\s]*Typ\s*[:.\-–\s|]*([^\n]*)",
         "Name": r".*Name\s*[:.\-–\s|]*([^\n]+)",
-        "Kleinster Radius": r".*Kleinster\s+Radius\s*[:.\-–\s|]*([^\n]+)"
+        "Kleinster Radius": r".*Kleinster\s+Radius\s*[:.\-–\s|]*([^\n]+)",
+        "Fasendurchmesser": r".*Fasendurchmesser\s*[:.\-–\s|]*([^\n]+)",
+        "Bohrdurchmesser": r".*Bohrdurchmesser\s*[:.\-–\s|]*([^\n]+)"
     }
 
     def parse_number(value_str: str, format_str: str | None = "{:.3f}") -> str | None:

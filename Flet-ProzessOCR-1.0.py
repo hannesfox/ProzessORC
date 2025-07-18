@@ -49,7 +49,7 @@ def _process_images_in_thread():
         if image_pos:
             pyautogui.click(pyautogui.center(image_pos))
             logging.info("'image1.png' gefunden und geklickt.")
-            time.sleep(0.05)
+            time.sleep(0.5)
         else:
             logging.warning("'image1.png' nicht auf dem Bildschirm gefunden.")
 
@@ -58,7 +58,7 @@ def _process_images_in_thread():
         if image_pos:
             pyautogui.click(pyautogui.center(image_pos))
             logging.info("'image2.png' gefunden und geklickt.")
-            time.sleep(0.05)
+            time.sleep(0.5)
         else:
             logging.warning("'image2.png' nicht auf dem Bildschirm gefunden.")
 
@@ -75,15 +75,16 @@ def execute_pyautogui_sequence():
     logging.info("Starte pyautogui-Automatisierungssequenz nach erfolgreichem OCR...")
     try:
         pyautogui.rightClick()
-        time.sleep(0.05)
+        time.sleep(0.5)
 
         image_thread = Thread(target=_process_images_in_thread, daemon=True)
         image_thread.start()
         image_thread.join(timeout=5.0)
 
         pyautogui.hotkey('ctrl', 'v')
-        time.sleep(0.2)
+        time.sleep(0.5)
         pyautogui.press('enter')
+
 
         logging.info("Pyautogui-Sequenz erfolgreich abgeschlossen.")
     except Exception as e:
@@ -113,7 +114,7 @@ def main(page: ft.Page):
         r"K:\Esprit\Prozesse\+1.4112 Niro", r"K:\Esprit\Prozesse\+3.3547 ALU",
         r"K:\Esprit\Prozesse\+Kunststoff", r"K:\Esprit\Prozesse\+3D",
         r"K:\Esprit\Prozesse\+Kunststoff", r"K:\Esprit\Prozesse\Gschwendtner",
-        r"K:\Esprit\Prozesse\+Kunststoff", r"K:\Esprit\Prozesse\IFW Prozesse für Kulissen",
+        r"K:\Esprit\Prozesse\+Kunststoff", r"K:\Esprit\Prozesse\KULISSEN-2025",
     ]
     path_stack: list[str] = []
 
