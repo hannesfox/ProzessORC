@@ -35,6 +35,12 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         )
         return None
 
+    # --- NUR Kulissen regeln benutzen ---
+    current_root_basename = os.path.basename(os.path.normpath(material_root_path)).lower()
+    is_kulissen_2025_active = (current_root_basename == "kulissen-2025")
+    logger.debug(
+        f"Aktueller Material-Root-Basisname: '{current_root_basename}'. Kulissen-Modus aktiv: {is_kulissen_2025_active}")
+
     # --- Werteextraktion aus OCR ---
     d_float_str = ocr_all_results.get("Durchmesser")
     d_float = None
@@ -267,6 +273,7 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         # Bohrungserkennung KULISSEN
         (["bohrung tief km"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
          dia is not None and bohr_dia is not None,
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
          (r"02_B-Seite 2312", "10") if dia == 12.0 and bohr_dia >= 18.0 else
@@ -452,6 +459,7 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         # --- Kulisse A seite Planen ---
         (["ak kulisse a"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
          tief is not None and 0.0 <= tief <= 80.0,
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
          (r"01_A-Seite 2312", "01")
@@ -459,6 +467,7 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
         (["ak kulisse b"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
          tief is not None and 0.0 <= tief <= 80.0,
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
          (r"02_B-Seite 2312", "01") if 0.0 <= tief <= 30.0 else
@@ -466,8 +475,9 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
          ),
 
         # ---Bohrungen D16 mit unterschiedlichen Fasen---
-        (["d16"],
+        (["d16", "di6"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
          dia == 16.0 and fase_dia is not None,
 
          # 2. Aktions-Lambda (Der "Manager"):
@@ -480,6 +490,7 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         # NP Spannnippel
         (["np"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
          dia is not None and dia == 6.8,
          (r"01_A-Seite 2312", "03")
          ),
@@ -487,6 +498,7 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
         # Wurm
         (["wand wurm"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
          kl_r is not None,
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
          (r"02_B-Seite 2312", "07") if kl_r <= 12.0 else
@@ -495,6 +507,7 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
         (["wurm"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
          kl_r is not None,
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
          (r"02_B-Seite 2312", "03") if kl_r <= 15.0 else
@@ -505,12 +518,15 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
 
         # Gewinde M12
         (["m12"],
-         lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia: dia is not None and 7.01 < dia <= 12.5,
+         lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
+         dia is not None and 7.01 < dia <= 12.5,
          (r"02_B-Seite 2312", "09")),
 
         # Bohrung Passung
         (["bohrung passung"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
          dia is not None,
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
          (r"02_B-Seite 2312", "15") if dia == 9.9 else
@@ -519,6 +535,19 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
          (r"02_B-Seite 2312", "18") if dia == 19.9 else
          None
          ),
+
+        # --- NEUE REGEL: Tasche D24 ---
+        (["tasche d24"],
+         lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
+         True,
+         (r"02_B-Seite 2312", "19")),
+
+        (["m10x1"],
+         lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia:
+         is_kulissen_2025_active and
+         dia is not None and dia == 9.0,
+         (r"02_B-Seite 2312", "20")),
 
 
 
