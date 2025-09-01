@@ -90,7 +90,7 @@ def ocr_line_parse(gray_img: np.ndarray) -> tuple[dict, str]:
         raise ValueError("Ungültiges Graustufenbild für OCR erhalten.")
 
     # --- Bildvorverarbeitung (Upscaling + Binarisierung für bessere Erkennung) ---
-    scale_factor = 2.0  # Ein höherer Skalierungsfaktor gibt Tesseract mehr Pixel zum Arbeiten
+    scale_factor = 3.0  # Ein höherer Skalierungsfaktor gibt Tesseract mehr Pixel zum Arbeiten
     logger.info(f"Upscaling Graustufenbild mit Faktor: {scale_factor}")
     height, width = gray_img.shape
     new_width = int(width * scale_factor)

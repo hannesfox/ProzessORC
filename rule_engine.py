@@ -385,15 +385,22 @@ def find_prc_path_by_rules(feature_type_lower: str | None, ocr_all_results: dict
          (r"05_DGB\+DGB mit Rückzug", "07")),
 
         # --- Bohrung Allgemein ---
+        # Sonderbohrer 7,8
+        (["bohrung"],
+         lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia: dia is not None and 7.79 <= dia < 7.81,
+         (r"05_DGB", "08")),
+
         (["bohrung"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia: dia is not None and 2.0 <= dia < 6.97,
          (r"05_DGB", "01")),
         (["bohrung"],
-         lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia: dia is not None and 7.02 <= dia < 9.29,
+         lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia: dia is not None and 7.81 <= dia < 9.29,
          (r"05_DGB", "01")),
         (["bohrung"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia: dia is not None and 6.99 <= dia < 7.01,
          (r"05_DGB", "03")),
+
+
         (["bohrung"],
          lambda ft_lower, ocr_res, dia, bbox_b, tief, bbox_l, kl_r, fase_dia, bohr_dia: dia is not None and 9.3 <= dia <= 17.5,
          (r"05_DGB", "02")),
